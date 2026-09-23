@@ -1,0 +1,28 @@
+# Local build, packaging and test output
+/build*/
+/dist/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+node_modules/
+/emsdk/
+
+# Games, private firmware and save files are never committed
+*.ngp
+*.ngc
+*.npc
+*.ngpsav
+*.sram
+*.bin
+*.rom
+
+# Editor and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+
+# public/ngpcraft.mjs and public/ngpcraft.wasm are intentionally tracked.

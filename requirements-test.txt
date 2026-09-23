@@ -1,0 +1,2 @@
+# Only needed for browser smoke tests. Node tests need no npm packages.
+playwright==1.63.0
