@@ -2,6 +2,8 @@
 
 A lightweight Neo Geo Pocket / Neo Geo Pocket Color player for websites. It compiles the **NgpCraft desktop C++ core directly to WebAssembly**, with a small JavaScript frontend. No Libretro, RetroArch, EmulatorJS, Qt, SDL, npm packages or CDN are required at runtime.
 
+**[▶ Try it online](https://tixul.github.io/NgpCraft_web_emulator/)** — open a ROM from your computer and play. Nothing is uploaded: the ROM stays in your browser.
+
 The ready-to-host files are included in [`public/`](public/). You only need a compiler if you want to rebuild the emulator. No game ROMs or proprietary BIOS dumps are included; the desktop project's clean-room HLE firmware is embedded in the WASM module.
 
 ## Try it locally
