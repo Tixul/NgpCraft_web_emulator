@@ -30,6 +30,14 @@ export class NgpCraftPlayer extends HTMLElement {
       :host(:fullscreen) .touch{width:min(100%,540px);margin-bottom:auto}:host(:fullscreen) .status{margin-top:8px}:host(:fullscreen) .settings{position:absolute;z-index:2;top:12px;right:12px;width:min(440px,calc(100% - 24px));max-height:calc(100% - 24px);overflow:auto;box-shadow:0 8px 40px #0009}
       @media(max-width:380px){section{padding:12px}.bar{gap:5px}button,.file{padding:8px}.dpad{grid-template-columns:repeat(3,38px)}}
       @media(max-height:500px) and (min-width:700px){:host(:fullscreen) canvas{width:calc((100dvh - 110px) * 160 / 152)}:host(:fullscreen) .touch{position:absolute;left:12px;bottom:85px;width:calc(100% - 24px);margin:0;pointer-events:none}:host(:fullscreen) .touch button{pointer-events:auto}}
+      canvas{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+      .touch{--pad-size:48px;--action-size:54px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+      .dpad{grid-template-columns:repeat(3,var(--pad-size));grid-template-rows:repeat(3,var(--pad-size));gap:2px;touch-action:none}
+      .dpad button{padding:0;min-width:0;font-size:19px}
+      .actions{display:grid;grid-template-columns:repeat(2,var(--action-size));gap:10px}
+      .actions button{width:var(--action-size);height:var(--action-size);padding:0;font-size:18px;border-radius:50%}
+      .actions [data-bit="64"]{grid-column:1 / -1;justify-self:center;width:72px;height:44px;border-radius:12px;font-size:13px}
+      @media(max-width:380px){.touch{--pad-size:44px;--action-size:48px;gap:8px}}
       </style>
       <section lang="en" aria-label="Neo Geo Pocket Color player">
         <header><strong>NGPCRAFT <small>WEB</small></strong><small>NEO GEO POCKET COLOR</small></header>
@@ -83,7 +91,13 @@ export class NgpCraftPlayer extends HTMLElement {
     on(this.$('.reset'),'click',()=>{if(this.loaded){this.stopAudio();this.module._web_reset();this.report('Game restarted.');}});
     on(this.$('.mute'),'click',()=>{if(this.settings.volume===0){this.settings.volume=100;this.muted=false;this.writeSettings();}else this.muted=!this.muted;this.applySettings();});
     on(this.$('.full'),'click',task(()=>this.toggleFullscreen()));
-    on(this.canvas,'dblclick',task(()=>this.toggleFullscreen()));
+    on(this.canvas,'pointerdown',e=>{this.canvasPointerType=e.pointerType;});
+    on(this.canvas,'dblclick',e=>{
+      // Mobile double taps also synthesize dblclick. Only a mouse may use
+      // this shortcut; touch users have the explicit maximize button.
+      if(this.canvasPointerType==='touch'||this.canvasPointerType==='pen'||e.sourceCapabilities?.firesTouchEvents){e.preventDefault();e.stopPropagation();return;}
+      task(()=>this.toggleFullscreen())();
+    });
     on(document,'fullscreenchange',()=>this.updateFullscreen());
     this.updateFullscreen();
     on(this.$('.options'),'click',()=>this.toggleOptions());
@@ -115,11 +129,19 @@ export class NgpCraftPlayer extends HTMLElement {
     });
     on(window,'keyup',e=>{this.keys.delete(e.code);if(e.code===this.captureReleaseCode){e.preventDefault();this.captureReleaseCode=null;}});
     on(this.canvas,'blur',()=>this.clearInput());
-    for(const b of this.shadowRoot.querySelectorAll('[data-bit]')){
-      on(b,'pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);this.pointers.set(e.pointerId,+b.dataset.bit);b.setAttribute('aria-pressed','true');});
-      const release=e=>{this.pointers.delete(e.pointerId);b.setAttribute('aria-pressed','false');};
-      on(b,'pointerup',release);on(b,'pointercancel',release);on(b,'lostpointercapture',release);
-    }
+    const touch=this.$('.touch');
+    this.pointerAreas=new Map();
+    on(touch,'pointerdown',e=>{
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      const area=e.target.closest('.dpad,.actions');if(!area)return;
+      if(area.matches('.actions')&&!e.target.closest('[data-bit]'))return;
+      e.preventDefault();touch.setPointerCapture(e.pointerId);
+      this.pointerAreas.set(e.pointerId,area);this.moveTouch(e);
+    });
+    on(touch,'pointermove',e=>{if(this.pointerAreas.has(e.pointerId)){e.preventDefault();this.moveTouch(e);}});
+    const release=e=>{this.pointerAreas.delete(e.pointerId);this.pointers.delete(e.pointerId);this.renderTouch();};
+    on(touch,'pointerup',release);on(touch,'pointercancel',release);on(touch,'lostpointercapture',release);
+    on(touch,'contextmenu',e=>e.preventDefault());
     on(this,'focusout',e=>{if(!this.contains(e.relatedTarget))this.clearInput();});
     on(window,'blur',()=>this.pause());
     on(document,'visibilitychange',()=>{if(document.hidden)this.pause();});
@@ -245,7 +267,28 @@ export class NgpCraftPlayer extends HTMLElement {
     this.$('.play').textContent='Pause';this.canvas.focus();this.report(this.gameName);
     this.raf=requestAnimationFrame(t=>this.tick(t));
   }
-  clearInput(){this.keys.clear();this.pointers.clear();for(const b of this.shadowRoot.querySelectorAll('[data-bit]'))b.setAttribute('aria-pressed','false');}
+  moveTouch(e){
+    const area=this.pointerAreas.get(e.pointerId);if(!area)return;
+    const r=area.getBoundingClientRect();let bit=0;
+    if(e.clientX>=r.left&&e.clientX<r.right&&e.clientY>=r.top&&e.clientY<r.bottom){
+      if(area.matches('.dpad')){
+        // The whole pad is a continuous surface, including gaps and diagonals.
+        const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+        bit=(x<1/3?4:x>2/3?8:0)|(y<1/3?1:y>2/3?2:0);
+      }else{
+        for(const b of area.querySelectorAll('[data-bit]')){
+          const box=b.getBoundingClientRect();
+          if(e.clientX>=box.left&&e.clientX<box.right&&e.clientY>=box.top&&e.clientY<box.bottom){bit=+b.dataset.bit;break;}
+        }
+      }
+    }
+    this.pointers.set(e.pointerId,bit);this.renderTouch();
+  }
+  renderTouch(){
+    let mask=0;for(const bit of this.pointers.values())mask|=bit;
+    for(const b of this.shadowRoot.querySelectorAll('[data-bit]'))b.setAttribute('aria-pressed',String(!!(mask&+b.dataset.bit)));
+  }
+  clearInput(){this.keys.clear();this.pointerAreas?.clear();this.pointers.clear();this.renderTouch();}
   async unlockAudio(){
     if(!this.audio){this.audio=new AudioContext({latencyHint:'interactive'});this.gain=this.audio.createGain();this.gain.gain.value=this.muted?0:this.settings.volume/100;this.gain.connect(this.audio.destination);}
     await this.audio.resume();

@@ -105,6 +105,7 @@ python -m pip install -r requirements-test.txt
 python tests/browser_smoke.py /path/to/game.ngp
 python tests/browser_regressions.py /path/to/game.ngp
 python tests/integrated_smoke.py /path/to/game.ngp
+python tests/mobile_touch.py /path/to/game.ngp
 python tests/check_package.py
 ```
 
