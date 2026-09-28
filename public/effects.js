@@ -2,14 +2,19 @@
 // remain untouched, including screenshots used by QR readers.
 const vertex=`attribute vec2 position; varying vec2 uv;
 void main(){uv=(position+1.0)*0.5;gl_Position=vec4(position,0.0,1.0);}`;
-const fragment=`precision mediump float;
+const fragment=`precision highp float;
+uniform vec2 footprint;
 uniform sampler2D picture; uniform int effect; varying vec2 uv;
+// Integral of a periodic boundary: average coverage across each output pixel.
+float boundaryIntegral(float x){return floor(x)*0.10+min(fract(x),0.10);}
+float boundary(float x,float width){return (boundaryIntegral(x+width*0.5)-boundaryIntegral(x-width*0.5))/width;}
 void main(){
   vec2 p=vec2(uv.x,1.0-uv.y);
   vec3 color=texture2D(picture,p).rgb;
   if(effect==1){
     vec2 cell=fract(p*vec2(160.0,152.0));
-    float grid=mix(0.82,1.0,step(0.10,cell.x)*step(0.10,cell.y));
+    vec2 coverage=vec2(boundary(p.x*160.0,footprint.x),boundary(p.y*152.0,footprint.y));
+    float grid=mix(0.82,1.0,(1.0-coverage.x)*(1.0-coverage.y));
     float stripe=floor(cell.x*3.0);
     vec3 mask=stripe<1.0?vec3(1.0,0.88,0.88):stripe<2.0?vec3(0.88,1.0,0.88):vec3(0.88,0.88,1.0);
     color*=grid*mask;
@@ -49,6 +54,7 @@ export class ScreenEffects {
     this.texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,this.texture);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,160,152,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+    this.footprint=gl.getUniformLocation(this.program,'footprint');
     this.effect=gl.getUniformLocation(this.program,'effect');gl.uniform1i(gl.getUniformLocation(this.program,'picture'),0);
     this.lost=e=>{e.preventDefault();onFailure();};this.canvas.addEventListener('webglcontextlost',this.lost);
     source.after(this.surface);
@@ -74,6 +80,7 @@ export class ScreenEffects {
     const filter=this.smooth?gl.LINEAR:gl.NEAREST;
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,filter);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,filter);
     gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,160,152,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+    gl.uniform2f(this.footprint,160/width,152/height);
     gl.uniform1i(this.effect,this.mode==='lcd'?1:2);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   }
   destroy(){

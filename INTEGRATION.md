@@ -64,3 +64,5 @@ Saves belong to the page origin and the ROM SHA-256. Use export/import to move s
 ## Mobile display and effects
 
 In mobile maximized/fullscreen view, the bottom toolbar is replaced by a top-right ? button. Opening it pauses gameplay; closing it resumes an already running game. Landscape uses the full available height, preserving the image aspect ratio. Portrait reserves space for touch controls when enabled. Settings ? General ? Screen effect offers Off, LCD and CRT. Host `effects.js` alongside the other public files. Effects use WebGL with a capped output resolution and fall back to the original display if unavailable. Capture and QR integrations always receive the unfiltered native image.
+
+Click or tap outside the settings panel or the mobile quick menu to dismiss it. Interacting inside the panel keeps it open. Closing settings preserves the existing paused state.

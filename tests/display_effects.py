@@ -35,6 +35,16 @@ try:
   check('commands appear at the top',page.locator('#player-toolbar').bounding_box()['y']<100)
   page.locator('.options').tap()
   check('settings close popup',not state("return p.hasAttribute('menu-open')"))
+  page.locator('.settings-heading').tap()
+  check('inside settings keeps panel open',page.locator('.settings').is_visible())
+  page.mouse.click(20,20)
+  check('outside click closes settings',not page.locator('.settings').is_visible())
+  page.locator('.quick-menu').tap();page.touchscreen.tap(20,20)
+  check('outside touch closes quick menu',not state("return p.hasAttribute('menu-open')"))
+  page.locator('.quick-menu').tap();page.locator('.options').tap();page.touchscreen.tap(20,20)
+  check('outside touch closes settings',not page.locator('.settings').is_visible())
+  page.locator('.quick-menu').tap();page.locator('.options').tap()
+
   hashes={}
   for mode in ['lcd','crt']:
    page.locator('.effect').select_option(mode)

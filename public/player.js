@@ -114,6 +114,15 @@ export class NgpCraftPlayer extends HTMLElement {
     on(this.$('.mute'),'click',()=>{if(this.settings.volume===0){this.settings.volume=100;this.muted=false;this.writeSettings();}else this.muted=!this.muted;this.applySettings();});
     on(this.$('.full'),'click',task(()=>{this.toggleQuickMenu(false);return this.toggleFullscreen();}));
     on(this.$('.quick-menu'),'click',()=>this.toggleQuickMenu());
+    on(document,'click',e=>{
+      const path=e.composedPath();
+      if(!this.$('.settings').hidden&&!path.includes(this.$('.settings'))&&!path.includes(this.$('.options'))){
+        this.toggleOptions(false);
+      }
+      if(this.hasAttribute('menu-open')&&!path.includes(this.$('#player-toolbar'))&&!path.includes(this.$('.quick-menu'))){
+        this.toggleQuickMenu(false);
+      }
+    });
     on(this.canvas,'pointerdown',e=>{this.canvasPointerType=e.pointerType;});
     on(this.canvas,'dblclick',e=>{
       // Mobile double taps also synthesize dblclick. Only a mouse may use

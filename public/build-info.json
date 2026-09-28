@@ -57,9 +57,9 @@
       "sha256": "4a1af729687a53aeab8e58a9a170cd459d1adaa45b3432d941677b604254d703"
     },
     "player.js": {
-      "bytes": 33836,
-      "gzip_bytes": 10326,
-      "sha256": "76ec7c4290c11e7c820a859165c20939ed89f1e6cbae484f50625460d5d1828a"
+      "bytes": 34241,
+      "gzip_bytes": 10391,
+      "sha256": "e9b01ece246860215430429728e31aba4bea56756409182995f01a2757fea96f"
     },
     "THIRD_PARTY_NOTICES.txt": {
       "bytes": 61934,
@@ -67,9 +67,9 @@
       "sha256": "da72ea24dc9136aea969147424a35b428e7431bdd5b94de53c63caf6bea41424"
     },
     "effects.js": {
-      "bytes": 5281,
-      "gzip_bytes": 2176,
-      "sha256": "86c9dd1f5197ef1e0e1109b25ec08fe5c496c06d7fca1c7ce3b1e59503809c68"
+      "bytes": 5871,
+      "gzip_bytes": 2355,
+      "sha256": "f948ef44cf6db0c3465b5d44b0b85e2d976002b425e5ed7afa2b01e04c1724c9"
     }
   }
 }
