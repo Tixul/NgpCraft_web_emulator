@@ -41,6 +41,15 @@ export class NgpCraftEmbed extends NgpCraftPlayer {
       @media(pointer:coarse) and (orientation:portrait){
         :host([expanded]) section:has(.touch:not([hidden])) canvas,:host(:fullscreen) section:has(.touch:not([hidden])) canvas{height:calc(100% - 224px - var(--safe-bottom))}
       }
+      @media(pointer:coarse){
+        :host([expanded]) canvas.game-screen,:host(:fullscreen) canvas.game-screen{height:100%;width:100%;margin:0}
+        :host([expanded]) .touch,:host(:fullscreen) .touch{bottom:max(16px,env(safe-area-inset-bottom,0px))}
+        :host([expanded]) .status,:host(:fullscreen) .status{right:60px}
+        :host([expanded][menu-open]) section>.bar,:host(:fullscreen[menu-open]) section>.bar{height:auto;padding:10px}
+      }
+      @media(pointer:coarse) and (orientation:portrait){
+        :host([expanded]) section:has(.touch:not([hidden])) canvas.game-screen,:host(:fullscreen) section:has(.touch:not([hidden])) canvas.game-screen{height:calc(100% - 180px - var(--safe-bottom))}
+      }
     `;
     this.shadowRoot.append(style);
     this.buildSettings();
@@ -107,6 +116,7 @@ export class NgpCraftEmbed extends NgpCraftPlayer {
         const canvas=this.captureFrame();
         const unhandled=this.dispatchEvent(new CustomEvent('ngpc-capture',{detail:{canvas},bubbles:true,composed:true,cancelable:true}));
         if(unhandled){const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='ngpcraft-capture.png';a.click();}
+        this.toggleQuickMenu(false);
       }
       catch(e){this.report(e.message);}
     },{signal});
@@ -153,7 +163,7 @@ export class NgpCraftEmbed extends NgpCraftPlayer {
     if(!active&&expandedPlayers.delete(this)&&!expandedPlayers.size)document.documentElement.style.overflow=savedOverflow;
     this.toggleAttribute('expanded',active);this.updateFullscreen();
   }
-  updateFullscreen(){const active=this.hasAttribute('expanded')||document.fullscreenElement===this;this.$('.full').textContent=active?'Restore':'Maximize';this.$('.full').setAttribute('aria-pressed',String(active));}
+  updateFullscreen(){const active=this.hasAttribute('expanded')||document.fullscreenElement===this;this.$('.full').textContent=active?'Restore':'Maximize';this.$('.full').setAttribute('aria-pressed',String(active));this.updateQuickMenu();}
 }
 customElements.define('ngpcraft-embed',NgpCraftEmbed);
 

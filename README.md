@@ -34,11 +34,13 @@ Upload `public/` to `/ngpc/` on your website:
 <script type="module" src="/ngpc/integrated.js"></script>
 ```
 
-The compact player downloads the ROM and emulator only after the user clicks Play. Its toolbar sits below the game image. The settings panel has General, Keys and Save tabs, a visible close button, and a fixed Resume button. Styles are isolated with Shadow DOM.
+The compact player downloads the ROM and emulator only after the user clicks Play. Its toolbar sits below the game image in normal view. On mobile in maximized/fullscreen view, a discreet top-right menu replaces the toolbar so landscape gameplay uses the full height. The settings panel has General, Keys and Save tabs, a visible close button, and a fixed Resume button. Styles are isolated with Shadow DOM.
 
 See [INTEGRATION.md](INTEGRATION.md) for JavaScript mounting, screenshots, QR-reader integration, iframe behavior and a migration example for an existing game site.
 
 ## Features
+
+- Optional GPU LCD grid and CRT scanlines in Settings ? General ? Screen effect; disabled by default. Screenshots and QR capture keep the original pixels.
 
 - Native 160 × 152 rendering, sharp or smooth scaling, stereo 44.1 kHz audio.
 - Desktop silicon timing and approximately 59.95 emulated frames per second.
@@ -62,7 +64,7 @@ This release is single-player and uses HLE handoff, English console language and
 
 Use HTTPS in production or localhost for development. Serve `.wasm` as `application/wasm` and `.js`/`.mjs` as JavaScript. Keep the loader, WASM and frontend modules together. Cross-origin ROM URLs need appropriate CORS headers. A restrictive CSP must allow the module scripts and WebAssembly execution.
 
-Enable gzip or Brotli on the server. The compact runtime is roughly **45 KB with gzip**, excluding ROMs, HTML and license notices. Exact sizes and hashes are in [`public/build-info.json`](public/build-info.json). Download size is not RAM usage: WASM memory starts at 32 MiB and can grow. Threads, SharedArrayBuffer and cross-origin isolation headers are not required.
+Enable gzip or Brotli on the server. Exact sizes and hashes are in [`public/build-info.json`](public/build-info.json). Download size is not RAM usage: WASM memory starts at 32 MiB and can grow. Threads, SharedArrayBuffer and cross-origin isolation headers are not required.
 
 ## Rebuild from source
 

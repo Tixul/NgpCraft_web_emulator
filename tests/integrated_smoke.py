@@ -73,6 +73,7 @@ try:
         assert touch.evaluate("document.querySelector('ngpcraft-embed').hasAttribute('expanded')")
         touch.wait_for_timeout(1000)
         touch.screenshot(path=str(root/'build/integrated-mobile.png'))
+        touch.locator('.quick-menu').tap()
         touch.locator('.options').tap()
         for tab in ['general','keys','saves']:
             touch.locator(f'[data-tab="{tab}"]').tap()
@@ -80,6 +81,7 @@ try:
                 button=touch.locator(selector).bounding_box()
                 assert button and button['y']>=0 and button['y']+button['height']<=812
         touch.locator('.close-options').tap()
+        touch.locator('.quick-menu').tap()
         touch.locator('.full').tap()
         assert touch.evaluate('document.documentElement.scrollWidth<=innerWidth')
         # Standalone compact iframe document: default capture downloads a PNG.

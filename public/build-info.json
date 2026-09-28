@@ -37,9 +37,9 @@
       "sha256": "09ae9765c0c434f52b3c614984029c4c077001f08fced9ca7e3624d28b754732"
     },
     "integrated.js": {
-      "bytes": 13515,
-      "gzip_bytes": 4334,
-      "sha256": "66e7d56b13ec942ea40e7db8bacc051ef5152f4e0cb35ef18addb9cd8ddd7d0b"
+      "bytes": 14473,
+      "gzip_bytes": 4470,
+      "sha256": "7b17f3bb6664f6532f5e292c76ee07d064214116e306cd5c2772fa94b5452df5"
     },
     "LICENSE.txt": {
       "bytes": 1062,
@@ -57,14 +57,19 @@
       "sha256": "4a1af729687a53aeab8e58a9a170cd459d1adaa45b3432d941677b604254d703"
     },
     "player.js": {
-      "bytes": 28253,
-      "gzip_bytes": 9134,
-      "sha256": "a06cf6e39790c582f9913d0a02dec6c0c826a52bf6b1b2d9cdeeadc11bcf2652"
+      "bytes": 33836,
+      "gzip_bytes": 10326,
+      "sha256": "76ec7c4290c11e7c820a859165c20939ed89f1e6cbae484f50625460d5d1828a"
     },
     "THIRD_PARTY_NOTICES.txt": {
       "bytes": 61934,
       "gzip_bytes": 9109,
       "sha256": "da72ea24dc9136aea969147424a35b428e7431bdd5b94de53c63caf6bea41424"
+    },
+    "effects.js": {
+      "bytes": 5281,
+      "gzip_bytes": 2176,
+      "sha256": "86c9dd1f5197ef1e0e1109b25ec08fe5c496c06d7fca1c7ce3b1e59503809c68"
     }
   }
 }

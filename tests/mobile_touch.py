@@ -64,7 +64,7 @@ try:
    page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(100)
    check(f'resize keeps maximized {width}',page.evaluate("document.querySelector('ngpcraft-embed').hasAttribute('expanded')"))
    check(f'no horizontal overflow {width}',page.evaluate('document.documentElement.scrollWidth<=innerWidth'))
-   for selector in ['[data-bit="4"]','[data-bit="8"]','[data-bit="16"]','[data-bit="32"]','[data-bit="64"]','.full']:
+   for selector in ['[data-bit="4"]','[data-bit="8"]','[data-bit="16"]','[data-bit="32"]','[data-bit="64"]','.quick-menu']:
     b=page.locator(selector).bounding_box();check(f'visible target {width} {selector}',b and b['x']>=0 and b['y']>=0 and b['x']+b['width']<=width+1 and b['y']+b['height']<=height+1)
    page.screenshot(path=str(out/f'mobile-{width}x{height}.png'))
   # A mouse double-click still provides the desktop shortcut.

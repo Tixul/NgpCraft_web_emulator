@@ -14,7 +14,7 @@ parser.add_argument('--emscripten',type=Path,required=True)
 args=parser.parse_args()
 root=Path(__file__).resolve().parent
 public=root/'public'
-allowed={'build-info.json','compact.html','embed.html','index.html','integrated.html','integrated.js','LICENSE.txt','ngpcraft.mjs','ngpcraft.wasm','player.js','THIRD_PARTY_NOTICES.txt'}
+allowed={'build-info.json','compact.html','embed.html','index.html','integrated.html','integrated.js','effects.js','LICENSE.txt','ngpcraft.mjs','ngpcraft.wasm','player.js','THIRD_PARTY_NOTICES.txt'}
 unexpected={p.name for p in public.iterdir()}-allowed
 if unexpected:
     raise SystemExit('Unexpected public files; review before packaging: '+', '.join(sorted(unexpected)))
@@ -43,5 +43,5 @@ with zipfile.ZipFile(dist/'NgpCraft-Web-Player.zip','w',zipfile.ZIP_DEFLATED) as
     z.write(root/'README.md','README.md')
     z.write(root/'VERIFICATION.md','VERIFICATION.md')
     z.write(root/'INTEGRATION.md','INTEGRATION.md')
-runtime=['ngpcraft.wasm','ngpcraft.mjs','player.js']
+runtime=['ngpcraft.wasm','ngpcraft.mjs','player.js','effects.js']
 print(json.dumps({'runtime_bytes':sum(manifest['files'][p]['bytes'] for p in runtime),'runtime_gzip_bytes':sum(manifest['files'][p]['gzip_bytes'] for p in runtime),'integrated_runtime_gzip_bytes':sum(manifest['files'][p]['gzip_bytes'] for p in runtime+['integrated.js']),'zip_bytes':(dist/'NgpCraft-Web-Player.zip').stat().st_size},indent=2))

@@ -60,3 +60,7 @@ ROM URLs resolve relative to the iframe document. CSS maximize stays inside the 
 ## Storage and input
 
 Saves belong to the page origin and the ROM SHA-256. Use export/import to move saves between origins. Iframe storage may be restricted by browser policy. Focus the game canvas for keyboard input. Escape cancels key assignment first, then closes settings, then exits expanded mode. Focus loss and hidden tabs pause emulation. See the README for controls and save-format limits.
+
+## Mobile display and effects
+
+In mobile maximized/fullscreen view, the bottom toolbar is replaced by a top-right ? button. Opening it pauses gameplay; closing it resumes an already running game. Landscape uses the full available height, preserving the image aspect ratio. Portrait reserves space for touch controls when enabled. Settings ? General ? Screen effect offers Off, LCD and CRT. Host `effects.js` alongside the other public files. Effects use WebGL with a capped output resolution and fall back to the original display if unavailable. Capture and QR integrations always receive the unfiltered native image.
