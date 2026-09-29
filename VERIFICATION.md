@@ -38,3 +38,5 @@ An Android Emulator Medium_Phone guest (Android 16/API 36.1, Chrome 150) passes 
 LCD follow-up: preserve original grid contrast, use high-precision coordinates and analytic pixel coverage to avoid aliased horizontal bands. A flat-field check at heights 304/375/413/507/608 px reduced maximum 20-row brightness variation from 7.63/255 to 0.81/255. Display/menu checks now pass 27 cases, including outside mouse/touch dismissal and inside-panel interaction.
 
 Follow-up: outside dismissal now uses capture-phase pointerdown, including touch controls that suppress click. 27 browser checks pass with a real touchscreen tap on the D-pad outside settings. LCD rendering now matches physical display resolution (bounded to 2048 pixels wide), with analytic RGB subpixel coverage as well as grid coverage; physical-device visual confirmation is still required.
+
+Save UI follow-up: tests/save_import_ui.py verifies visible import controls, the real file chooser and byte-identical save import roundtrip in fullscreen for both player variants. Integrated smoke also passes.

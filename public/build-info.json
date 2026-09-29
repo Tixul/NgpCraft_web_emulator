@@ -57,9 +57,9 @@
       "sha256": "4a1af729687a53aeab8e58a9a170cd459d1adaa45b3432d941677b604254d703"
     },
     "player.js": {
-      "bytes": 34302,
-      "gzip_bytes": 10410,
-      "sha256": "bd73f7cfc88252220ef07d0eb8a18a6b7c4a2bd59d1061573d507068ee020724"
+      "bytes": 34506,
+      "gzip_bytes": 10466,
+      "sha256": "8ef37dea5c123d36f4c8c5e05b506bea1b485d11f70e51d0af4737b873bf75bb"
     },
     "THIRD_PARTY_NOTICES.txt": {
       "bytes": 61934,
