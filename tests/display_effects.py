@@ -1,4 +1,4 @@
-"""GPU effects and unobtrusive mobile fullscreen controls, with a supplied ROM."""
+﻿"""GPU effects and unobtrusive mobile fullscreen controls, with a supplied ROM."""
 import functools,http.server,json,sys,threading
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -41,7 +41,7 @@ try:
   check('outside click closes settings',not page.locator('.settings').is_visible())
   page.locator('.quick-menu').tap();page.touchscreen.tap(20,20)
   check('outside touch closes quick menu',not state("return p.hasAttribute('menu-open')"))
-  page.locator('.quick-menu').tap();page.locator('.options').tap();page.touchscreen.tap(20,20)
+  page.locator('.quick-menu').tap();page.locator('.options').tap();page.locator('.dpad button').first.tap()
   check('outside touch closes settings',not page.locator('.settings').is_visible())
   page.locator('.quick-menu').tap();page.locator('.options').tap()
 
@@ -54,7 +54,7 @@ try:
     return {effect:p.settings.effect,url:e.canvas.toDataURL(),error:g.getError(),upper:Array.from(a.slice(index,index+4)),width:e.canvas.width,height:e.canvas.height,raw:p.captureFrame().toDataURL()};''')
    check(mode+' compiles and draws',data['effect']==mode and data['error']==0 and data['upper'][0]>data['upper'][2])
    check(mode+' preserves raw capture',data['raw']==state('return window.raw'))
-   check(mode+' bounds GPU resolution',data['width']<=640 and data['height']<=608)
+   check(mode+' bounds GPU resolution',data['width']<=2048 and data['height']<=1946)
    hashes[mode]=data['url']
    page.locator('.close-options').tap();page.screenshot(path=str(OUT/f'effect-{mode}-landscape.png'))
    page.locator('.quick-menu').tap();page.locator('.options').tap()
@@ -85,3 +85,4 @@ try:
   check('no WebGL still plays',f.evaluate("document.querySelector('ngpcraft-embed').settings.effect==='off'"))
   (OUT/'display-effects-results.json').write_text(json.dumps(results,indent=2));print(f'PASS: {len(results)} effects/mobile menu checks');browser.close()
 finally:server.shutdown()
+

@@ -6,8 +6,9 @@ const fragment=`precision highp float;
 uniform vec2 footprint;
 uniform sampler2D picture; uniform int effect; varying vec2 uv;
 // Integral of a periodic boundary: average coverage across each output pixel.
-float boundaryIntegral(float x){return floor(x)*0.10+min(fract(x),0.10);}
-float boundary(float x,float width){return (boundaryIntegral(x+width*0.5)-boundaryIntegral(x-width*0.5))/width;}
+float pulseIntegral(float x,float duty){return floor(x)*duty+min(fract(x),duty);}
+float boundary(float x,float width){return (pulseIntegral(x+width*0.5,0.10)-pulseIntegral(x-width*0.5,0.10))/width;}
+float subpixel(float x,float width){return (pulseIntegral(x+width*0.5,1.0/3.0)-pulseIntegral(x-width*0.5,1.0/3.0))/width;}
 void main(){
   vec2 p=vec2(uv.x,1.0-uv.y);
   vec3 color=texture2D(picture,p).rgb;
@@ -15,8 +16,8 @@ void main(){
     vec2 cell=fract(p*vec2(160.0,152.0));
     vec2 coverage=vec2(boundary(p.x*160.0,footprint.x),boundary(p.y*152.0,footprint.y));
     float grid=mix(0.82,1.0,(1.0-coverage.x)*(1.0-coverage.y));
-    float stripe=floor(cell.x*3.0);
-    vec3 mask=stripe<1.0?vec3(1.0,0.88,0.88):stripe<2.0?vec3(0.88,1.0,0.88):vec3(0.88,0.88,1.0);
+    float x=p.x*160.0;
+    vec3 mask=0.88+0.12*vec3(subpixel(x,footprint.x),subpixel(x-1.0/3.0,footprint.x),subpixel(x-2.0/3.0,footprint.x));
     color*=grid*mask;
   }else{
     float scan=0.90+0.10*cos(p.y*152.0*6.2831853);
@@ -71,8 +72,9 @@ export class ScreenEffects {
     const parent=source.offsetParent;if(!parent)return;
     const box=parent.getBoundingClientRect();
     Object.assign(this.surface.style,{left:`${r.left-box.left-parent.clientLeft+parent.scrollLeft+(r.width-w)/2}px`,top:`${r.top-box.top-parent.clientTop+parent.scrollTop+(r.height-h)/2}px`,width:`${w}px`,height:`${h}px`,display:'block'});
-    // A bounded 4x target keeps optional effects cheap on large/mobile screens.
-    const scale=Math.max(1,Math.min(4,w*(window.devicePixelRatio||1)/160));
+    // Match physical display pixels to avoid resampling the LCD mask a second time.
+    // Bound exceptionally large displays to 2048 pixels across.
+    const scale=Math.max(1,Math.min(2048/160,w*(window.devicePixelRatio||1)/160));
     const width=Math.round(160*scale),height=Math.round(152*scale);
     if(this.canvas.width!==width||this.canvas.height!==height){this.canvas.width=width;this.canvas.height=height;}
     const gl=this.gl;gl.viewport(0,0,width,height);gl.useProgram(this.program);
