@@ -1,6 +1,6 @@
 # Verification
 
-The release uses desktop core commit `b2f8318b817dff486bf78c18c997459c36e0940c` (ABI 18), compiled with Emscripten 4.0.23. `public/build-info.json` records desktop source and public artifact hashes. No ROM is included.
+The release uses desktop core commit `af7b0214dc1c810c301b9dcf527a0d546a98e72b` (ABI 18; adds micro-DMA-driven DAC audio), compiled with Emscripten 4.0.23. `public/build-info.json` records desktop source and public artifact hashes. No ROM is included.
 
 ## Automated checks
 
