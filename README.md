@@ -123,6 +123,9 @@ Browser tests use an installed Microsoft Edge through Playwright. `check_package
 | `package.py` | Release ZIP and build-manifest generation |
 | `tests/` | Core, browser and artifact checks |
 
+## Thanks to
+HardhatWarrior (PR1)
+
 ## License
 
 The project uses the [MIT license](LICENSE), copyright 2026 Tixul. Compiler runtime notices are included in [`public/THIRD_PARTY_NOTICES.txt`](public/THIRD_PARTY_NOTICES.txt). Retain both when distributing the compiled player. No third-party emulator frontend or proprietary SNK firmware is included.
