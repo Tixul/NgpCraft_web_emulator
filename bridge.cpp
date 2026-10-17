@@ -37,7 +37,7 @@ void sync_save() {
     for (unsigned c = 0; c < 2; ++c) {
         save.capacity[c] = ngpc_flash_capacity(machine, c);
         if (save.capacity[c])
-            ngpc_read_mem(machine, address(c, save.capacity[c]), save.flash[c], std::min(save.capacity[c], tail_size));
+            ngpc_flash_peek(machine, address(c, save.capacity[c]), save.flash[c], std::min(save.capacity[c], tail_size));
     }
     save.checksum = hash(&save, offsetof(Save, checksum));
 }
