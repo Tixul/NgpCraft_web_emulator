@@ -1,5 +1,5 @@
 {
-  "desktop_commit": "c769b511dc54f4d72f22d4699cfbb5cd68aa14a2",
+  "desktop_commit": "c46ce50561bbe3de87bb95ca4baeaaab851a7db0",
   "source_sha256": {
     "cpp/src/apu.cpp": "2c9123b0f3d67393ec075b3f7eab7829f2bdcdac0df4a67f26a9ff16edef09d4",
     "cpp/src/core.cpp": "72befbba1bbcdfa0c289a96241f5133860900b4cb103198120e8c6f6003a6144",
@@ -13,7 +13,7 @@
     "cpp/src/machine.hpp": "2a909cecc4ab69beea190e2639315d6de30a67cf6c44ed0261fbf9ddba690dc8",
     "cpp/src/z80.hpp": "589a5372a10664fa730eaf87923dd97f95a796db568cdc54018068d53383ed2e",
     "cpp/include/ngpc_core.h": "9281cb27003e5e33303db92161b24416a953d554ea513e2bc000b6431d3caf6c",
-    "hle_bios/bios_hle.bin": "11c2899850d56eff2ddcba4c0ef9ed7c5a8ea77f38fdcffc050c30295c6ac169"
+    "hle_bios/bios_hle.bin": "9112306f2d1ef29281604d7ee3b3e816b2b9cff04a93a4174f5d8181f06fd5da"
   },
   "files": {
     "compact.html": {
@@ -58,8 +58,8 @@
     },
     "ngpcraft.wasm": {
       "bytes": 122549,
-      "gzip_bytes": 29087,
-      "sha256": "59cb114d4f5d16bd8838832e9d9233f8c1f02a152c057f6e0a628a5bbc13b73f"
+      "gzip_bytes": 29106,
+      "sha256": "62e6cf29381fbba618b4672ed4961afbe15b7f2ccfbb9acf6d09e51777b1752b"
     },
     "player.js": {
       "bytes": 34377,
